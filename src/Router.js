@@ -6,9 +6,9 @@ import {
     Link,
 } from 'react-router-dom';
 
-import Posts from './pages/posts';
-import AddPost from './pages/addPost';
-import DetailPost from './pages/detailPost';
+import Posts from './pages/Posts';
+import AddPost from './pages/AddPost';
+import DetailPost from './pages/DetailPost';
 
 export default function() {
     return (
@@ -21,8 +21,12 @@ export default function() {
                 </nav>
                 <div className="container "  style={{ marginTop: '75px'}}>
                     <Switch>
-                        <Route exact path="/" component={Posts} />
-                        <Route path="/posts/add" component={AddPost} />
+                        <Route exact path="/">
+                            <Posts />
+                        </Route>
+                        <Route path="/posts/add">
+                            <AddPost />
+                        </Route >
                         <Route path="/posts/:id" component={DetailPost} />
                     </Switch>
                 </div>
