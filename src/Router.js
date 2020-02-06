@@ -3,31 +3,32 @@ import {
     BrowserRouter as Router,
     Switch,
     Route,
-    Link,
 } from 'react-router-dom';
 
-import Posts from './pages/Posts';
-import AddPost from './pages/AddPost';
-import DetailPost from './pages/DetailPost';
+import PrivateRoute from "./components/PrivateRoute";
+import Navigation from './components/Navigation';
+import Blogs from './containers/Blogs';
+import Posts from './containers/Posts';
+import AddPost from './containers/AddPost';
+import DetailPost from './containers/DetailPost';
 
 export default function() {
     return (
         <>
             <Router>
-                <nav className="navbar navbar-light bg-white shadow-sm fixed-top">
-                    <div className="container">
-                        <Link className="navbar-brand" to="/">Medium</Link>
-                    </div>
-                </nav>
+                <Navigation />
                 <div className="container "  style={{ marginTop: '75px'}}>
                     <Switch>
                         <Route exact path="/">
-                            <Posts />
+                            <Blogs />
                         </Route>
-                        <Route path="/posts/add">
+                        <PrivateRoute path="/blogs/:blogId/posts/:id" component={DetailPost} />
+                        <PrivateRoute path="/blogs/:id">
+                            <Posts />
+                        </PrivateRoute>
+                        <PrivateRoute path="/blogs/:blogId/posts/add">
                             <AddPost />
-                        </Route >
-                        <Route path="/posts/:id" component={DetailPost} />
+                        </PrivateRoute>
                     </Switch>
                 </div>
             </Router>

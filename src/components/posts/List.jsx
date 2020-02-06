@@ -1,17 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-export default function ({post}) {
-
-    // const shorten = (str, maxLen = 100, separator = ' ') => {
-    //     if (str.length <= maxLen) return str;
-    //     return str.substr(0, str.lastIndexOf(separator, maxLen)) + '...';
-    // }
-
+export default function ({post, blogId}) {
     return (
         <>
             <Link 
-                to={ `/posts/${post.id}` } 
+                to={ `/blogs/${blogId}/posts/${post.id}` } 
                 className="card shadow-sm border-0 text-dark mb-3"
                 style={{cursor: 'pointer', textDecoration: 'none'}}
                 >

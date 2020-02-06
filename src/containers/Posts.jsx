@@ -1,5 +1,8 @@
 import React, { Component } from "react";
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { getPosts } from '../store/actions/post';
+import { GET_POSTS } from '../store/actionTypes';
 import ListPost from '../components/posts/List';
 import Search from '../components/posts/Search';
 import Pagination from '../components/posts/Pagination';
@@ -12,6 +15,7 @@ class posts extends Component {
             posts: [],
             filteredPost: []
         }
+        console.log(props)
     }
 
     componentDidMount() {
@@ -19,33 +23,22 @@ class posts extends Component {
     }
 
     componentWillUnmount() {
-        this.setState(state => state.posts = [])
+        this.props.dispatch({
+            type: GET_POSTS,
+            data: []
+        })
     }
 
     fetchPosts = (search, pagination) => {
-        this.setState({ isLoading: true })
-        let url = `${process.env.REACT_APP_BASE_URL}/posts?key=${process.env.REACT_APP_BLOGGER_KEY}`
+        const params = this.props.match.params.id
+        let url = `${process.env.REACT_APP_BASE_URL}/${params}/posts?key=${process.env.REACT_APP_BLOGGER_KEY}`
         if (search) {
-            url = `${process.env.REACT_APP_BASE_URL}/posts/search?key=${process.env.REACT_APP_BLOGGER_KEY}&q=${search}`
+            url = `${process.env.REACT_APP_BASE_URL}/${params}/posts/search?key=${process.env.REACT_APP_BLOGGER_KEY}&q=${search}`
         }
         if (pagination) {
             url += `&pageToken=${pagination}`
         }
-        fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                console.log(data)
-                console.log(data.items)
-                this.setState({ posts: data, isLoading: false, filteredPost: data.items })
-            })
-            .catch(err => console.log(err))
-    }
-
-    filterPost = (title) => {
-        const data = this.state.posts.filter(function (post) {  
-            return post.title.indexOf(title) !== -1
-        })
-        this.setState({ filteredPost: data })
+        this.props.dispatch(getPosts(url))
     }
 
 
@@ -55,7 +48,7 @@ class posts extends Component {
                 <div className="row">
                     <div className="col-8">
                         { 
-                            this.state.isLoading 
+                            this.props.onload_post
                             ? (
                                 <div className="d-flex justify-content-center">
                                     <div className="spinner-border" role="status">
@@ -66,9 +59,19 @@ class posts extends Component {
                             : (
                                 <>
                                 {
-                                    this.state.filteredPost.map(post => {
-                                        return <ListPost key={post.id} post={post} />
-                                    })
+                                    !this.props.posts.length
+                                        ? ( <p className='mx-auto'>There's no posts</p> )
+                                        : (
+                                            this.props.posts.map(post => {
+                                                return (
+                                                    <ListPost 
+                                                        key={post.id} 
+                                                        post={post} 
+                                                        blogId={this.props.match.params.id} 
+                                                        />
+                                                    )
+                                            })
+                                        )
                                 }
                                     <div className="mt-5">
                                         <div className="float-right">
@@ -105,4 +108,8 @@ class posts extends Component {
 
 }
 
-export default posts
+const mapStateToProps = state => {
+    return state.post
+}
+
+export default withRouter(connect(mapStateToProps)(posts))
