@@ -2,8 +2,8 @@ import React from 'react';
 import { Parser } from 'html-to-react';
 import { Link } from "react-router-dom";
 import useGetPost from '../hooks/useGetPost';
-
 import { useSelector } from 'react-redux';
+
 export default function ({match}) {
     const params = match.params.blogId
     const url = `${process.env.REACT_APP_BASE_URL}/${params}/posts/${match.params.id}?key=${process.env.REACT_APP_BLOGGER_KEY}`

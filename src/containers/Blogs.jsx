@@ -25,7 +25,7 @@ class Blogs extends Component {
     }
 
     componentDidMount() {
-        if (this.props.user.isLogged) {
+        if (this.props.user.isLogged && this.props.user.data.tokenBearer) {
             this.props.dispatch(getBlogs())   
         }
     }
@@ -69,8 +69,8 @@ class Blogs extends Component {
                                             </div>
                                         </div>
                                     )
-                                    : !blogs.length
-                                        ? ( <p>There's not blogs</p> )
+                                    : !blogs || !blogs.length
+                                        ? ( <p className='mx-auto'>There's not blogs</p> )
                                         : blogs.map(blog => {
                                                 return (
                                                     <div className="col-lg-6 mb-3" key={blog.id}>
